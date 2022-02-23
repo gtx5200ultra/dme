@@ -4,6 +4,7 @@ using System.Net.Http;
 using AutoMapper;
 using Newtonsoft.Json;
 using Phonebook.EF;
+using Phonebook.EF.DbModels;
 using Phonebook.Parser.Models;
 using Serilog;
 
@@ -16,7 +17,7 @@ namespace Phonebook.Parser
 
         static void Main(string[] args)
         {
-            IEnumerable<PhonebookContext.UserDb> dbItems;
+            IEnumerable<UserDb> dbItems;
             var config = new MapperConfiguration(cfg => cfg.AddProfile(new PhonebookJsonToDbProfile()));
             var mapper = new Mapper(config);
 
@@ -33,7 +34,7 @@ namespace Phonebook.Parser
                 var deserializedResponse =
                     JsonConvert.DeserializeObject<RandomUserApiResponse>(httpClientResponse.Content.ReadAsStringAsync()
                         .Result);
-                dbItems = mapper.Map<IEnumerable<PhonebookContext.UserDb>>(deserializedResponse.results);
+                dbItems = mapper.Map<IEnumerable<UserDb>>(deserializedResponse.results);
             }
             catch (Exception e)
             {

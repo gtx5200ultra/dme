@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Phonebook.Contracts.Models;
+using Phonebook.EF.DbModels;
 
 namespace Phonebook.EF
 {
@@ -7,14 +8,14 @@ namespace Phonebook.EF
     {
         public MappingProfile()
         {
-            CreateMap<PhonebookContext.UserDb, PhonebookUser>()
+            CreateMap<UserDb, PhonebookUser>()
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Pictures, opt => opt.MapFrom(src => src.Picture))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
 
-            CreateMap<PhonebookContext.PictureDb, PhonebookPicture>()
+            CreateMap<PictureDb, PhonebookPicture>()
                 .ForMember(dest => dest.Large, opt => opt.MapFrom(src => src.Large))
                 .ForMember(dest => dest.Medium, opt => opt.MapFrom(src => src.Medium))
                 .ForMember(dest => dest.Thumbnail, opt => opt.MapFrom(src => src.Thumbnail));

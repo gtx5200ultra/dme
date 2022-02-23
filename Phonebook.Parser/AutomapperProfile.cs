@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Phonebook.EF;
+using Phonebook.EF.DbModels;
 using Phonebook.Parser.Models;
 
 namespace Phonebook.Parser
@@ -9,7 +10,7 @@ namespace Phonebook.Parser
     {
         public PhonebookJsonToDbProfile()
         {
-            CreateMap<Result, PhonebookContext.UserDb>()
+            CreateMap<Result, UserDb>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.login.uuid)))
                 .ForMember(dest => dest.LoginDb, opt => opt.MapFrom(src => src.login))
                 .ForMember(dest => dest.LocationDb, opt => opt.MapFrom(src => src.location))
@@ -25,17 +26,17 @@ namespace Phonebook.Parser
                 .ForMember(dest => dest.Registered, opt => opt.MapFrom(src => src.registered.date))
                 .ForMember(dest => dest.UsersPhonesDb, opt => opt.MapFrom(src => new[]
                 {
-                        new PhonebookContext.UsersPhonesDb
+                        new UsersPhonesDb
                         {
-                            Phone = new PhonebookContext.PhoneDb
+                            Phone = new PhoneDb
                             {
                                 Number = src.phone,
                                 Type = 1
                             }
                         },
-                        new PhonebookContext.UsersPhonesDb
+                        new UsersPhonesDb
                         {
-                            Phone = new PhonebookContext.PhoneDb
+                            Phone = new PhoneDb
                             {
                                 Number = src.cell,
                                 Type = 2,
@@ -43,24 +44,24 @@ namespace Phonebook.Parser
                         },
                 }));
 
-            CreateMap<Picture, PhonebookContext.PictureDb>()
+            CreateMap<Picture, PictureDb>()
                 .ForMember(dest => dest.Large, opt => opt.MapFrom(src => src.large))
                 .ForMember(dest => dest.Thumbnail, opt => opt.MapFrom(src => src.thumbnail))
                 .ForMember(dest => dest.Medium, opt => opt.MapFrom(src => src.medium));
 
-            CreateMap<Id, PhonebookContext.IdentityCardDb>()
+            CreateMap<Id, IdentityCardDb>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.name))
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.value));
 
-            CreateMap<Street, PhonebookContext.StreetDb>()
+            CreateMap<Street, StreetDb>()
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.number))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.name));
 
-            CreateMap<Timezone, PhonebookContext.TimezoneDb>()
+            CreateMap<Timezone, TimezoneDb>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.description))
                 .ForMember(dest => dest.Offset, opt => opt.MapFrom(src => src.offset));
 
-            CreateMap<Location, PhonebookContext.LocationDb>()
+            CreateMap<Location, LocationDb>()
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.city))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.country))
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.coordinates.latitude))
@@ -70,7 +71,7 @@ namespace Phonebook.Parser
                 .ForMember(dest => dest.StreetDb, opt => opt.MapFrom(src => src.street))
                 .ForMember(dest => dest.TimezoneDb, opt => opt.MapFrom(src => src.timezone));
 
-            CreateMap<Login, PhonebookContext.LoginDb>()
+            CreateMap<Login, LoginDb>()
                 .ForMember(dest => dest.Md5, opt => opt.MapFrom(src => src.md5))
                 .ForMember(dest => dest.Salt, opt => opt.MapFrom(src => src.salt))
                 .ForMember(dest => dest.Sha1, opt => opt.MapFrom(src => src.sha1))
