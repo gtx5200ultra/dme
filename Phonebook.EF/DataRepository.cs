@@ -3,16 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Phonebook.Contracts;
+using Phonebook.Contracts.Models;
+using Phonebook.EF.Interfaces;
 
 namespace Phonebook.EF
 {
-    public interface IDataRepository
-    {
-        Task<IEnumerable<PhonebookUser>> GetUsersAsync(string sortField, string sortOrder, int page = 1,
-            int itemsOnPage = 10);
-    }
-
     public class DataRepository : IDataRepository
     {
         private readonly PhonebookContext _context;

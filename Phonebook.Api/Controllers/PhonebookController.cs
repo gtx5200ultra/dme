@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Phonebook.Contracts;
+using Phonebook.Contracts.Models;
 using Phonebook.EF;
+using Phonebook.EF.Interfaces;
 
 namespace Phonebook.Api.Controllers
 {

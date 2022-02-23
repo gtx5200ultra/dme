@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Phonebook.Contracts;
+using Phonebook.Contracts.Models;
 
 namespace Phonebook.EF
 {
