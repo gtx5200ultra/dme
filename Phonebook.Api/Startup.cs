@@ -7,8 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Phonebook.EF;
 
 namespace Phonebook.Api
 {
@@ -25,6 +31,10 @@ namespace Phonebook.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
+            services.AddAutoMapper(c => c.AddProfile<MappingProfile>(), typeof(Startup));
+            services.AddDbContext<PhonebookContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Database"]));
+            services.AddScoped<IDataRepository, DataRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +44,13 @@ namespace Phonebook.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Phonebook API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

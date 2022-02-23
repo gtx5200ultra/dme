@@ -18,21 +18,20 @@ namespace Phonebook.EF
 
         //public string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Database=phonebook;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        //public MobileContext(DbContextOptions<MobileContext> options, string connectionString)
-        //    : base(options)
-        //{
-        //    Database.EnsureCreated();
-        //}
+        public PhonebookContext(DbContextOptions<PhonebookContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
+        public PhonebookContext(string connectionString) : base(GetOptions(connectionString))
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UsersPhonesDb>()
                 .HasKey(c => new { c.PhoneId, c.UserId });
-        }
-
-        public PhonebookContext(string connectionString) : base(GetOptions(connectionString))
-        {
-            Database.EnsureCreated();
         }
 
         private static DbContextOptions GetOptions(string connectionString)
