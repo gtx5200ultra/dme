@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using Newtonsoft.Json;
 using Phonebook.EF;
+using Phonebook.Parser.Models;
+using Serilog;
 
 namespace Phonebook.Parser
 {
@@ -13,24 +16,49 @@ namespace Phonebook.Parser
 
         static void Main(string[] args)
         {
-            using (var httpClient = new HttpClient())
+            IEnumerable<PhonebookContext.UserDb> dbItems;
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(new PhonebookJsonToDbProfile()));
+            var mapper = new Mapper(config);
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            Log.Information($"Requesting test users from API: {ApiUrl}...");
+
+            try
             {
+                using var httpClient = new HttpClient();
                 var httpClientResponse = httpClient.GetAsync(ApiUrl).Result;
-                var deserializedResponse = 
-                    JsonConvert.DeserializeObject<RandomUserApiResponse>(httpClientResponse.Content.ReadAsStringAsync().Result);
+                var deserializedResponse =
+                    JsonConvert.DeserializeObject<RandomUserApiResponse>(httpClientResponse.Content.ReadAsStringAsync()
+                        .Result);
+                dbItems = mapper.Map<IEnumerable<PhonebookContext.UserDb>>(deserializedResponse.results);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Unable to retrieve users from API");
+                Console.ReadKey();
+                return;
             }
 
-            //using (var context = new PhonebookContext(ConnectionString))
-            //{
+            Log.Information("Attempting to save users into DB...");
 
-            //    var std = new PhonebookContext.UserDb()
-            //    {
-            //        Email = "Bill"
-            //    };
+            try
+            {
+                using var context = new PhonebookContext(ConnectionString);
+                context.Users.AddRange(dbItems);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Unable to save users");
+                Console.ReadKey();
+                return;
+            }
 
-            //    context.Users.Add(std);
-            //    context.SaveChanges();
-            //}
+            Log.Information("All operations done");
+            Console.ReadKey();
         }
     }
 }

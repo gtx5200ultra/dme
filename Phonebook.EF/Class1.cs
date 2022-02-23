@@ -72,7 +72,7 @@ namespace Phonebook.EF
             public int PhoneId { get; set; }
 
             [Required, ForeignKey(nameof(UserDb))]
-            public int UserId { get; set; }
+            public Guid UserId { get; set; }
             public virtual PhoneDb Phone { get; set; }
             public virtual UserDb User { get; set; }
         }
@@ -84,8 +84,8 @@ namespace Phonebook.EF
             public Guid Id { get; set; }
             public string Gender { get; set; }
             public string Title { get; set; }
-            public string First { get; set; }
-            public string Last { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
             public string Email { get; set; }
             public DateTime BirthDate { get; set; }
             public DateTimeOffset Registered { get; set; }
@@ -103,6 +103,7 @@ namespace Phonebook.EF
             public virtual IdentityCardDb IdentityCard { get; set; }
             public virtual LoginDb LoginDb { get; set; }
             public virtual LocationDb LocationDb { get; set; }
+            public virtual PictureDb Picture { get; set; }
             public virtual ICollection<UsersPhonesDb> UsersPhonesDb { get; set; }
         }
 
@@ -129,7 +130,7 @@ namespace Phonebook.EF
             public string City { get; set; }
             public string State { get; set; }
             public string Country { get; set; }
-            public int Postcode { get; set; }
+            public string Postcode { get; set; }
             
             public string Latitude { get; set; }
             public string Longitude { get; set; }
